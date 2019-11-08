@@ -1,0 +1,20 @@
+
+---
+code: |
+  client = client_name
+mandatory: true
+---
+
+---
+question: |
+  What are the terms of the contract?
+fields: 
+
+  - no label: contract_provisions
+    datatype: area
+
+---
+question: |
+  What is your name?
+fields: 
+  - no label: your_name

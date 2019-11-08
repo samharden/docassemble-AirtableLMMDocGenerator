@@ -1,0 +1,42 @@
+question: |
+  Who are you sending this letter to?
+fields: 
+  - no label: recipient_who
+    input type: radio
+    choices: 
+      - ${ client_name }
+      - Someone else
+---
+code: |
+  if doc_name == 'Letter':
+    if recipient_who == client_name:
+      recipient = client_name
+      recipient_address_info = get_client_address_by_id(client_id)
+      recipient_address = recipient_address_info['street_ad']
+      recipient_city = recipient_address_info['city']
+      recipient_state = recipient_address_info['state']
+      recipient_zip = recipient_address_info['zip_c']
+mandatory: true
+---
+question: |
+  Please complete the following information:
+fields: 
+  - Name: recipient
+  - Address: recipient_address
+  - City: recipient_city
+  - State: recipient_state
+  - Zip: recipient_zip
+
+---
+question: |
+  What is the body of your letter?
+fields: 
+
+  - Explain: letter_body
+    datatype: area
+
+---
+question: |
+  What is your name?
+fields: 
+  - no label: your_name

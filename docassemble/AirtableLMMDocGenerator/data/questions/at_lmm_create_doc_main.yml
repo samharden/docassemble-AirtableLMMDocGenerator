@@ -1,0 +1,76 @@
+---
+include:
+  - at_lmm_create_letter.yml
+  - at_lmm_create_contract.yml
+---
+mandatory: True
+code: |
+
+  if doc_name == 'Letter':
+    template_here = 'at_letter.docx'
+  elif doc_name == 'Contract': 
+    template_here = 'at_contract.docx'
+
+---
+
+modules:
+  - .get_matters_from_at
+---
+
+question: |
+  Which Case?
+fields: 
+  - no label: choice_matter
+    datatype: dropdown
+    code : |
+      matter_stuff
+---
+code: |
+  matter_stuff = get_matters()
+  client_id = search_matters_by_id(choice_matter)
+  client_name = get_client_name_by_id(client_id)
+  doc_types = get_doctypes()
+  doc_name = search_docs_by_id(type_doc)
+---
+
+question: |
+  What kind of document are you creating for ${ client_name }?
+fields: 
+  - Document title: doc_title
+  - Document type: type_doc
+    datatype: dropdown
+    code : |
+      doc_types
+
+---
+mandatory: true
+question: |
+  Here is your document.
+subquestion: |
+  Are you ready to upload to Airtable?
+yesno: upload_approve
+attachment:
+  name: my doc
+  filename: doc_to_upload
+  variable name: my_file
+  docx template file: 
+    code: |
+      template_here
+  valid formats:
+    - pdf
+    - docx
+---
+code: |
+  successful_upload = upload_file_to_documents(my_file.pdf.url_for(), type_doc, 'docassemble', choice_matter, doc_title)
+
+---
+question: |
+  % if upload_approve:
+    % if successful_upload:
+  Success
+    % else:
+  Success!
+    % endif
+  % endif
+mandatory: True    
+    
